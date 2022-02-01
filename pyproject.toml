@@ -1,0 +1,54 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.nitpick]
+style = "https://raw.githubusercontent.com/wemake-services/wemake-python-styleguide/master/styles/nitpick-style-wemake.toml"
+
+
+[tool.poetry]
+name = "fs-graphene-django"
+description = "Graphene-django extension"
+version = "0.1.0"
+license = "MIT"
+
+authors = []
+
+readme = "README.md"
+
+repository = "https://github.com/flatstack/fs-graphene-django"
+
+keywords = []
+
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[tool.poetry.dependencies]
+python = "^3.8.10"
+Django = "^4.0.1"
+pytest = "^6.2.5"
+graphene = "^3.0"
+
+[tool.poetry.dev-dependencies]
+mypy = "^0.931"
+
+wemake-python-styleguide = "^0.16"
+flake8-pytest-style = "^1.6"
+nitpick = "^0.31"
+
+safety = "^1.10"
+
+pytest = "^6.2"
+pytest-cov = "^3.0"
+pytest-randomly = "^3.11"
+
+sphinx = "^4.4"
+sphinx-autodoc-typehints = "^1.16"
+doc8 = "^0.10"
+m2r2 = "^0.3"
+tomlkit = "^0.8"
