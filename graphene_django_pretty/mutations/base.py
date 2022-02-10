@@ -46,4 +46,4 @@ class BaseMutation(graphene.Mutation):
     @classmethod
     def mutate(cls, info, **kwargs):
         """Abstract method."""
-        raise NotImplementedError('Mutate is not implemented for {0}'.format(cls.__name__))
+        raise NotImplementedError('mutate() is not implemented for {0}'.format(cls.__name__))

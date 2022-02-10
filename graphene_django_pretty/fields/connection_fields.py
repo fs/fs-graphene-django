@@ -5,27 +5,12 @@ from django.core.exceptions import ValidationError
 from graphene.utils.str_converters import to_snake_case as parse_to_snake_case
 from graphene_django.filter import DjangoFilterConnectionField
 
-
-def get_enum_list_as_input(args: List) -> List[str]:
-    """Parse enum to filter."""
-    return [get_enum_as_input(enum_value) for enum_value in args]
-
-
-def get_enum_as_input(enum: str) -> str:
-    """Get enum value."""
-    return enum.value
-
-
-def is_list_of_enums(args: List) -> bool:
-    """Check list of enums containing."""
-    if not args:
-        return False
-    return isinstance(args[0], Enum)
-
-
-def is_enum(arg: str) -> bool:
-    """Check arg for enum."""
-    return isinstance(arg, Enum)
+from graphene_django_pretty.fields.utils import (
+    get_enum_as_input,
+    get_enum_list_as_input,
+    is_enum,
+    is_list_of_enums,
+)
 
 
 def define_filter_arg(field_name: str, field_value: object) -> object:

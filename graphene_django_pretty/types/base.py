@@ -1,35 +1,42 @@
 import warnings
+import graphene
+
 from copy import deepcopy
 from typing import Any, Dict, List, Type
 
+from fs_graphene_django.types.registry import FieldDescriptionDrivenRegistry
 from graphene import Field
 from graphene.relay import Connection, Node
 from graphene.types.interface import Interface
-from graphene.types.objecttype import ObjectType
+from graphene.types.objecttype import ObjectType, ObjectTypeOptions
 from graphene.types.utils import yank_fields_from_attrs
 from graphene_django.registry import Registry
 from graphene_django.types import (
     ALL_FIELDS,
     DJANGO_FILTER_INSTALLED,
-    DjangoObjectType,
     DjangoObjectTypeOptions,
     construct_fields,
     get_global_registry,
     validate_fields,
 )
-from graphene_django.utils import is_valid_django_model
 
-from fs_graphene_django.types.registry import FieldDescriptionDrivenRegistry
+from graphene_django_pretty.types.utils import is_valid_django_model
 
 
-class PatchedDjangoObjectTypeOptions(DjangoObjectTypeOptions):
+class PatchedDjangoObjectTypeOptions(ObjectTypeOptions):
     """Redefined class for adding special attributes for implementing interface fields."""
 
+    model = None  # type: Model
+    registry = None  # type: Registry
+    connection = None  # type: Type[Connection]
+
+    filter_fields = ()
+    filterset_class = None
     possible_types = ()
     default_resolver = None
 
 
-class BaseDjangoObjectType(DjangoObjectType):
+class BaseDjangoObjectType(ObjectType):
     """
     Redefined class for adding possibility of getting field description and auto add it to schema.
     Class in general repeats DjangoObjectType, but adds defining of interface fields
@@ -37,9 +44,6 @@ class BaseDjangoObjectType(DjangoObjectType):
     """
 
     id = graphene.ID(required=True, description='ID of the object')
-
-    class Meta:
-        abstract = True
 
     @classmethod
     def __init_subclass_with_meta__(
@@ -73,48 +77,24 @@ class BaseDjangoObjectType(DjangoObjectType):
             'Registry, received "{}".'
         ).format(cls.__name__, registry)
 
-        if filter_fields and filterset_class:
-            raise Exception("Can't set both filter_fields and filterset_class")
+        assert filter_fields and filterset_class, "Can't set both filter_fields and filterset_class"
 
-        if not DJANGO_FILTER_INSTALLED and (filter_fields or filterset_class):
-            raise Exception(
-                (
-                    "Can only set filter_fields or filterset_class if "
-                    "Django-Filter is installed"
-                ),
-            )
+        assert DJANGO_FILTER_INSTALLED and (filter_fields or filterset_class), (
+            "Can only set filter_fields or filterset_class if "
+            "Django-Filter is installed"
+        )
 
         assert not (fields and exclude), (
             "Cannot set both 'fields' and 'exclude' options on "
             "DjangoObjectType {class_name}.".format(class_name=cls.__name__)
         )
 
-        # Alias only_fields -> fields
-        if only_fields and fields:
-            raise Exception("Can't set both only_fields and fields")
-        if only_fields:
-            warnings.warn(
-                "Defining `only_fields` is deprecated in favour of `fields`.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-            fields = only_fields
         if fields and fields != ALL_FIELDS and not isinstance(fields, (list, tuple)):
             raise TypeError(
                 'The `fields` option must be a list or tuple or "__all__". '
                 "Got %s." % type(fields).__name__,
             )
 
-        # Alias exclude_fields -> exclude
-        if exclude_fields and exclude:
-            raise Exception("Can't set both exclude_fields and exclude")
-        if exclude_fields:
-            warnings.warn(
-                "Defining `exclude_fields` is deprecated in favour of `exclude`.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-            exclude = exclude_fields
         if exclude and not isinstance(exclude, (list, tuple)):
             raise TypeError(
                 "The `exclude` option must be a list or tuple. Got %s."
@@ -214,6 +194,21 @@ class BaseDjangoObjectType(DjangoObjectType):
                 merged_fields.get(field_name).description = field_description.description
 
         return merged_fields
+
+    @classmethod
+    def is_type_of(cls, root, info):
+        """Check type of instance."""
+        if isinstance(root, cls):
+            return True
+        if not is_valid_django_model(root.__class__):
+            raise Exception(('Received incompatible instance "{}".').format(root))
+
+        if cls._meta.model._meta.proxy:
+            model = root._meta.model
+        else:
+            model = root._meta.model._meta.concrete_model
+
+        return model == cls._meta.model
 
     @classmethod
     def node_resolver(cls, _, info, id):  # noqa: WPS125

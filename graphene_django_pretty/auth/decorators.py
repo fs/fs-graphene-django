@@ -3,7 +3,7 @@ from functools import partial, wraps
 
 from django.contrib.auth import get_user_model
 from graphql.execution.execute import GraphQLResolveInfo
-from fs_graphene_django.auth.exceptions import PermissionDeniedError
+from graphene_django_pretty.auth.exceptions import PermissionDeniedError
 
 
 User = get_user_model()

@@ -1,4 +1,4 @@
-from fs_graphene_django.auth.decorators import login_required
+from graphene_django_pretty.auth.decorators import login_required
 
 
 class OR:

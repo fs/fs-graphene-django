@@ -2,7 +2,7 @@ from graphene_django.views import GraphQLView
 from fs_graphene_django.error.format import format_error
 
 
-class GraphQLView(GraphQLView):
+class PrettyGraphQLView(GraphQLView):
 
     @staticmethod
     def format_error(error):

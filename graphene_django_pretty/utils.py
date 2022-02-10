@@ -11,7 +11,7 @@ except ImportError:
 
 
 try:
-    import django_filters  # noqa
+    import polymorphic  # noqa
 
     DJANGO_POLYMORPHIC_INSTALLED = True
 except ImportError:
