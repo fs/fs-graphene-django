@@ -7,8 +7,10 @@ sys.path.insert(0, ROOT_PATH + "/tests/django_setup")
 SECRET_KEY = 1
 
 INSTALLED_APPS = [
-    "graphene_django",
-    "tests.django_setup",
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'graphene_django',
+    'tests.django_setup',
 ]
 
 DATABASES = {
@@ -25,4 +27,4 @@ TEMPLATES = [
 
 GRAPHENE = {"SCHEMA": "tests.django_setup.schema.schema"}
 
-ROOT_URLCONF = "graphene_django.tests.urls"
+ROOT_URLCONF = "tests.django_setup.urls"
