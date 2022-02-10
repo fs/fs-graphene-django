@@ -975,6 +975,17 @@ docs = ["sphinx", "sphinx-rtd-theme"]
 testing = ["django", "django-configurations (>=2.0)"]
 
 [[package]]
+name = "pytest-pythonpath"
+version = "0.7.4"
+description = "pytest plugin for adding to the PYTHONPATH from command line or configs."
+category = "main"
+optional = false
+python-versions = ">=2.6, <4"
+
+[package.dependencies]
+pytest = ">=2.5.2,<7"
+
+[[package]]
 name = "pytest-randomly"
 version = "3.11.0"
 description = "Pytest plugin to randomly order tests and control random.seed."
@@ -1380,7 +1391,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8.10"
-content-hash = "4af84729245e194970ab969a9eebebe5a267a66c9b82057104f0f3d39680951f"
+content-hash = "1e0d066b918c6111318ab29edc334d45530290f9da258fed4f83e53cd14b5c14"
 
 [metadata.files]
 alabaster = [
@@ -1810,6 +1821,10 @@ pytest-cov = [
 pytest-django = [
     {file = "pytest-django-4.5.2.tar.gz", hash = "sha256:d9076f759bb7c36939dbdd5ae6633c18edfc2902d1a69fdbefd2426b970ce6c2"},
     {file = "pytest_django-4.5.2-py3-none-any.whl", hash = "sha256:c60834861933773109334fe5a53e83d1ef4828f2203a1d6a0fa9972f4f75ab3e"},
+]
+pytest-pythonpath = [
+    {file = "pytest-pythonpath-0.7.4.tar.gz", hash = "sha256:64e195b23a8f8c0c631fb16882d9ad6fa4137ed1f2961ddd15d52065cd435db6"},
+    {file = "pytest_pythonpath-0.7.4-py3-none-any.whl", hash = "sha256:e73e11dab2f0b83e73229e261242b251f0a369d7f527dbfec068822fd26a6ce5"},
 ]
 pytest-randomly = [
     {file = "pytest-randomly-3.11.0.tar.gz", hash = "sha256:9f013b8c1923130f3d0a286fde56e1fc52cfb3547b8eedf2765c460cee979c7f"},

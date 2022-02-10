@@ -26,5 +26,5 @@ TEMPLATES = [
 ]
 
 GRAPHENE = {"SCHEMA": "tests.django_setup.schema.schema"}
-
+USE_TZ = True
 ROOT_URLCONF = "tests.django_setup.urls"
