@@ -8,6 +8,10 @@ class FieldDescriptionDrivenRegistry(Registry):
     def set_graphene_field_description(field, converted):
         """Updates kwargs for description key from model field definition of graphql description is empty."""
         field_description = None
+        #TODO: Fix this converted field value
+        if not getattr(converted, 'kwargs', None):
+            return
+
         graphene_field_description = converted.kwargs.get('description', None)
         if not graphene_field_description:
             field_description = field.verbose_name

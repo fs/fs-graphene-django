@@ -61,7 +61,7 @@ class BaseDjangoModelUnion(graphene.Union):
         return None
 
 
-class BaseDjangoObjectType(ObjectType):
+class BaseDjangoObjectType(DjangoObjectType):
     """
     Redefined class for adding possibility of getting field description and auto add it to schema.
     Class in general repeats DjangoObjectType, but adds defining of interface fields
@@ -69,6 +69,9 @@ class BaseDjangoObjectType(ObjectType):
     """
 
     id = graphene.ID(required=True, description='ID of the object')
+
+    class Meta:
+        abstract = True
 
     @classmethod
     def __init_subclass_with_meta__(
