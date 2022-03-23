@@ -1,18 +1,17 @@
 import pytest
-from graphene_django import DjangoObjectType
 
-from graphene_django_pretty.types.base import BaseUnion
+from graphene_django_pretty.types.base import BaseDjangoModelUnion, BaseDjangoObjectType
 from tests.django_setup.models import Article, Author, Post
 
 
-class PostType(DjangoObjectType):
+class PostType(BaseDjangoObjectType):
 
     class Meta:
         model = Post
         fields = '__all__'
 
 
-class ArticleType(DjangoObjectType):
+class ArticleType(BaseDjangoObjectType):
 
     class Meta:
         model = Article
@@ -30,7 +29,7 @@ def data():
 
 @pytest.mark.django_db()
 def test_union(data):
-    class TextUnion(BaseUnion):
+    class TextUnion(BaseDjangoModelUnion):
 
         class Meta:
             types = (PostType, ArticleType)
