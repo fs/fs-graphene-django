@@ -42,6 +42,7 @@ class BaseDjangoModelUnion(graphene.Union):
 
     @classmethod
     def assert_type_subclass(cls, type_):
+        """Assert if type is not DjangoObjectType subclass."""
         assert issubclass(
             type_,
             DjangoObjectType,
@@ -61,7 +62,7 @@ class BaseDjangoModelUnion(graphene.Union):
     @classmethod
     def resolve_type(cls, instance, info):
         """Resolving grapql type by models instance."""
-        if hasattr(cls._meta, 'types'):
+        if getattr(cls._meta, 'types', False):
             for type_ in cls._meta.types:
                 if isinstance(instance, type_._meta.model):
                     return type_
@@ -120,7 +121,7 @@ class BaseDjangoObjectType(DjangoObjectType):
                 (
                     "Can only set filter_fields or filterset_class if "
                     "Django-Filter is installed"
-                )
+                ),
             )
 
         assert not (fields and exclude), (
