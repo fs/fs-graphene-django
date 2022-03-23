@@ -211,7 +211,7 @@ class BaseDjangoObjectType(DjangoObjectType):
         if not skip_registry:
             registry.register(cls)
 
-    @ classmethod
+    @classmethod
     def get_interface_fields(cls, interfaces: List[Type[Interface]]) -> Dict[str, Any]:
         """Returns fields referred in list of interfaces."""
         fields = {}
@@ -233,7 +233,7 @@ class BaseDjangoObjectType(DjangoObjectType):
 
         return fields
 
-    @ classmethod
+    @classmethod
     def merge_model_and_interface_fields(
         cls,
         django_fields,
@@ -255,7 +255,7 @@ class BaseDjangoObjectType(DjangoObjectType):
 
         return merged_fields
 
-    @ classmethod
+    @classmethod
     def is_type_of(cls, root, info):
         """Check type of instance."""
         if isinstance(root, cls):
@@ -272,12 +272,12 @@ class BaseDjangoObjectType(DjangoObjectType):
 
         return model == cls._meta.model
 
-    @ classmethod
+    @classmethod
     def node_resolver(cls, _, info, id):  # noqa: WPS125
         """Removing base64 encoding in ID field."""
         return cls.get_node(info, id)
 
-    @ classmethod
+    @classmethod
     def NodeField(cls):  # noqa: N802
         """New Node field."""
         node_field = Node.Field(cls)
