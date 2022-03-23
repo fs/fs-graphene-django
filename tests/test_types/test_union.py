@@ -1,3 +1,4 @@
+import graphene
 import pytest
 
 from graphene_django_pretty.types.base import BaseDjangoModelUnion, BaseDjangoObjectType
@@ -8,14 +9,12 @@ class PostType(BaseDjangoObjectType):
 
     class Meta:
         model = Post
-        fields = '__all__'
 
 
 class ArticleType(BaseDjangoObjectType):
 
     class Meta:
         model = Article
-        fields = '__all__'
 
 
 @pytest.fixture()
@@ -28,11 +27,29 @@ def data():
 
 
 @pytest.mark.django_db()
-def test_union(data):
+def test_union_type_resolvers(data):
     class TextUnion(BaseDjangoModelUnion):
 
         class Meta:
             types = (PostType, ArticleType)
-
     assert TextUnion.resolve_type(data[0], None) == ArticleType
     assert TextUnion.resolve_type(data[1], None) == PostType
+
+
+def test_assert_none_types():
+    with pytest.raises(AssertionError):
+        class TestUnion(BaseDjangoModelUnion):
+
+            class Meta:
+                types = ()
+
+
+def test_assert_invalid_types():
+    class TestType(graphene.ObjectType):
+        test_field = graphene.String()
+
+    with pytest.raises(AssertionError):
+        class TestUnion(BaseDjangoModelUnion):
+
+            class Meta:
+                types = (TestType,)

@@ -38,16 +38,22 @@ class BaseDjangoModelUnion(graphene.Union):
     """Base union type for django object types."""
 
     class Meta:
-        types = (None,)
+        abstract = True
+
+    @classmethod
+    def assert_type_subclass(cls, type_):
+        assert issubclass(
+            type_,
+            DjangoObjectType,
+        ), f'Must provide Django object types for Union {cls.__name__}.'
 
     @classmethod
     def __init_subclass_with_meta__(cls, types=None, **options):
-        for type_ in types:
-            assert issubclass(
-                type_,
-                DjangoObjectType,
-            ), f'Must provide Django object types for Union {cls.__name__}.'
-        super(graphene.Union, cls).__init_subclass_with_meta__(
+        if types:
+            for type_ in types:
+                cls.assert_type_subclass(type_)
+
+        super(BaseDjangoModelUnion, cls).__init_subclass_with_meta__(
             types=types,
             **options,
         )
@@ -55,9 +61,10 @@ class BaseDjangoModelUnion(graphene.Union):
     @classmethod
     def resolve_type(cls, instance, info):
         """Resolving grapql type by models instance."""
-        for type_ in cls._meta.types:
-            if isinstance(instance, type_._meta.model):
-                return type_
+        if hasattr(cls._meta, 'types'):
+            for type_ in cls._meta.types:
+                if isinstance(instance, type_._meta.model):
+                    return type_
         return None
 
 
@@ -73,7 +80,7 @@ class BaseDjangoObjectType(DjangoObjectType):
     class Meta:
         abstract = True
 
-    @classmethod
+    @ classmethod
     def __init_subclass_with_meta__(
         cls,
         model=None,
@@ -203,7 +210,7 @@ class BaseDjangoObjectType(DjangoObjectType):
         if not skip_registry:
             registry.register(cls)
 
-    @classmethod
+    @ classmethod
     def get_interface_fields(cls, interfaces: List[Type[Interface]]) -> Dict[str, Any]:
         """Returns fields referred in list of interfaces."""
         fields = {}
@@ -225,7 +232,7 @@ class BaseDjangoObjectType(DjangoObjectType):
 
         return fields
 
-    @classmethod
+    @ classmethod
     def merge_model_and_interface_fields(
         cls,
         django_fields,
@@ -247,7 +254,7 @@ class BaseDjangoObjectType(DjangoObjectType):
 
         return merged_fields
 
-    @classmethod
+    @ classmethod
     def is_type_of(cls, root, info):
         """Check type of instance."""
         if isinstance(root, cls):
@@ -264,12 +271,12 @@ class BaseDjangoObjectType(DjangoObjectType):
 
         return model == cls._meta.model
 
-    @classmethod
+    @ classmethod
     def node_resolver(cls, _, info, id):  # noqa: WPS125
         """Removing base64 encoding in ID field."""
         return cls.get_node(info, id)
 
-    @classmethod
+    @ classmethod
     def NodeField(cls):  # noqa: N802
         """New Node field."""
         node_field = Node.Field(cls)
