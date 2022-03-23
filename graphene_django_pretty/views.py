@@ -1,5 +1,5 @@
-from graphene_django.views import GraphQLView
 from fs_graphene_django.error.format import format_error
+from graphene_django.views import GraphQLView
 
 
 class PrettyGraphQLView(GraphQLView):

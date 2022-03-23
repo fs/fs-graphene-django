@@ -5,8 +5,13 @@ class Author(models.Model):
     name = models.CharField(max_length=255)
 
 
-
 class Post(models.Model):
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    author = models.ForeignKey(
+        Author, on_delete=models.CASCADE, related_name='posts')
     text = models.TextField()
 
+
+class Article(models.Model):
+    author = models.ForeignKey(
+        Author, on_delete=models.CASCADE, related_name='articles')
+    text = models.TextField()
