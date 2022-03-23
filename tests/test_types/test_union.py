@@ -30,7 +30,6 @@ def data():
 
 @pytest.mark.django_db()
 def test_union(data):
-
     class TextUnion(BaseUnion):
 
         class Meta:

@@ -236,6 +236,6 @@ class BaseDjangoObjectType(ObjectType):
     @classmethod
     def NodeField(cls):  # noqa: N802
         """New Node field."""
-        node_field = graphene.relay.Node.Field(cls)
+        node_field = Node.Field(cls)
         node_field.wrap_resolve = lambda parent: cls.node_resolver
         return node_field
