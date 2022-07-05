@@ -1,4 +1,5 @@
 import graphene
+
 from graphene_django_pretty.mutations.base import BaseMutation
 from graphene_django_pretty.mutations.output import BasePayload
 

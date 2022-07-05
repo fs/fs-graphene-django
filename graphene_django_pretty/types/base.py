@@ -1,25 +1,23 @@
 import warnings
-import graphene
-
 from copy import deepcopy
 from typing import Any, Dict, List, Type
 
-from fs_graphene_django.types.registry import FieldDescriptionDrivenRegistry
-from graphene import Field
+import graphene
 from graphene.relay import Connection, Node
 from graphene.types.interface import Interface
 from graphene.types.objecttype import ObjectType, ObjectTypeOptions
 from graphene.types.utils import yank_fields_from_attrs
+from graphene_django import DjangoObjectType
 from graphene_django.registry import Registry
 from graphene_django.types import (
     ALL_FIELDS,
     DJANGO_FILTER_INSTALLED,
-    DjangoObjectTypeOptions,
     construct_fields,
     get_global_registry,
     validate_fields,
 )
 
+from graphene_django_pretty.types.registry import FieldDescriptionDrivenRegistry
 from graphene_django_pretty.types.utils import is_valid_django_model
 
 
@@ -36,7 +34,42 @@ class PatchedDjangoObjectTypeOptions(ObjectTypeOptions):
     default_resolver = None
 
 
-class BaseDjangoObjectType(ObjectType):
+class BaseDjangoModelUnion(graphene.Union):
+    """Base union type for django object types."""
+
+    class Meta:
+        abstract = True
+
+    @classmethod
+    def assert_type_subclass(cls, type_):
+        """Assert if type is not DjangoObjectType subclass."""
+        assert issubclass(
+            type_,
+            DjangoObjectType,
+        ), f'Must provide Django object types for Union {cls.__name__}.'
+
+    @classmethod
+    def __init_subclass_with_meta__(cls, types=None, **options):
+        if types:
+            for type_ in types:
+                cls.assert_type_subclass(type_)
+
+        super(BaseDjangoModelUnion, cls).__init_subclass_with_meta__(
+            types=types,
+            **options,
+        )
+
+    @classmethod
+    def resolve_type(cls, instance, info):
+        """Resolving grapql type by models instance."""
+        if getattr(cls._meta, 'types', False):
+            for type_ in cls._meta.types:
+                if isinstance(instance, type_._meta.model):
+                    return type_
+        return None
+
+
+class BaseDjangoObjectType(DjangoObjectType):
     """
     Redefined class for adding possibility of getting field description and auto add it to schema.
     Class in general repeats DjangoObjectType, but adds defining of interface fields
@@ -45,7 +78,10 @@ class BaseDjangoObjectType(ObjectType):
 
     id = graphene.ID(required=True, description='ID of the object')
 
-    @classmethod
+    class Meta:
+        abstract = True
+
+    @ classmethod
     def __init_subclass_with_meta__(
         cls,
         model=None,
@@ -77,16 +113,20 @@ class BaseDjangoObjectType(ObjectType):
             'Registry, received "{}".'
         ).format(cls.__name__, registry)
 
-        assert filter_fields and filterset_class, "Can't set both filter_fields and filterset_class"
+        if filter_fields and filterset_class:
+            raise Exception("Can't set both filter_fields and filterset_class")
 
-        assert DJANGO_FILTER_INSTALLED and (filter_fields or filterset_class), (
-            "Can only set filter_fields or filterset_class if "
-            "Django-Filter is installed"
-        )
+        if not DJANGO_FILTER_INSTALLED and (filter_fields or filterset_class):
+            raise Exception(
+                (
+                    "Can only set filter_fields or filterset_class if "
+                    "Django-Filter is installed"
+                ),
+            )
 
         assert not (fields and exclude), (
             "Cannot set both 'fields' and 'exclude' options on "
-            "DjangoObjectType {class_name}.".format(class_name=cls.__name__)
+            'DjangoObjectType {class_name}.'.format(class_name=cls.__name__)
         )
 
         if fields and fields != ALL_FIELDS and not isinstance(fields, (list, tuple)):
@@ -112,8 +152,14 @@ class BaseDjangoObjectType(ObjectType):
             )
 
         django_fields = yank_fields_from_attrs(
-            construct_fields(model, registry, fields, exclude, convert_choices_to_enum),
-            _as=Field,
+            construct_fields(
+                model,
+                registry,
+                fields,
+                exclude,
+                convert_choices_to_enum,
+            ),
+            _as=graphene.Field,
         )
 
         if use_connection is None and interfaces:
@@ -127,13 +173,13 @@ class BaseDjangoObjectType(ObjectType):
                 connection_class = Connection
 
             connection = connection_class.create_type(
-                "{}Connection".format(options.get("name") or cls.__name__),
+                '{}Connection'.format(options.get("name") or cls.__name__),
                 node=cls,
             )
 
         if connection is not None:
             assert issubclass(connection, Connection), (
-                "The connection must be a Connection. Received {}"
+                'The connection must be a Connection. Received {}'
             ).format(connection.__name__)
 
         if not _meta:
@@ -142,7 +188,10 @@ class BaseDjangoObjectType(ObjectType):
         # Added in this class instead original DjangoObjectType:
         # Getting fields for django-model anf graphene model and merging them
         interface_fields = cls.get_interface_fields(interfaces)
-        merged_fields = cls.merge_model_and_interface_fields(django_fields, interface_fields)
+        merged_fields = cls.merge_model_and_interface_fields(
+            django_fields,
+            interface_fields,
+        )
 
         _meta.model = model
         _meta.registry = registry
@@ -175,12 +224,21 @@ class BaseDjangoObjectType(ObjectType):
             fields.update(interface._meta.fields)
 
         for base in reversed(cls.__mro__):
-            fields.update(yank_fields_from_attrs(base.__dict__, _as=Field))
+            fields.update(
+                yank_fields_from_attrs(
+                    base.__dict__,
+                    _as=graphene.Field,
+                ),
+            )
 
         return fields
 
     @classmethod
-    def merge_model_and_interface_fields(cls, django_fields, interface_fields) -> Dict[str, Any]:
+    def merge_model_and_interface_fields(
+        cls,
+        django_fields,
+        interface_fields,
+    ) -> Dict[str, Any]:
         """
         Returns merged fields with solved conflicts in field description.
         For example, when Interface filed has got own field description and Django Models's Field has got own.
@@ -191,7 +249,9 @@ class BaseDjangoObjectType(ObjectType):
         for field_name, field_description in interface_fields.items():
             # replace description from interface if it is not none.
             if field_description.description:
-                merged_fields.get(field_name).description = field_description.description
+                merged_fields.get(
+                    field_name,
+                ).description = field_description.description
 
         return merged_fields
 
@@ -201,7 +261,9 @@ class BaseDjangoObjectType(ObjectType):
         if isinstance(root, cls):
             return True
         if not is_valid_django_model(root.__class__):
-            raise Exception(('Received incompatible instance "{}".').format(root))
+            raise Exception(
+                ('Received incompatible instance "{}".').format(root),
+            )
 
         if cls._meta.model._meta.proxy:
             model = root._meta.model
@@ -218,8 +280,6 @@ class BaseDjangoObjectType(ObjectType):
     @classmethod
     def NodeField(cls):  # noqa: N802
         """New Node field."""
-        node_field = graphene.relay.Node.Field(cls)
+        node_field = Node.Field(cls)
         node_field.wrap_resolve = lambda parent: cls.node_resolver
         return node_field
-
-

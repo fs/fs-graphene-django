@@ -1,5 +1,6 @@
-from typing import Any
 import inspect
+from itertools import chain
+from typing import Any
 
 from django.db import models
 
@@ -15,3 +16,16 @@ def is_valid_django_model(model: Any) -> bool:
         return issubclass(model, PolymorphicModel)
 
     return is_django_model
+
+
+def merge_querysets(*querysets, **kwargs):
+    """Merge querysets function."""
+    sort_key = kwargs['sort_key']
+    reverse_needed = kwargs['reverse']
+    queryset = list(chain(*querysets))
+    if sort_key:
+        reverse = reverse_needed if reverse_needed else False
+        queryset.sort(key=lambda qs_item: getattr(
+            qs_item, sort_key), reverse=reverse)
+
+    return queryset

@@ -1,6 +1,6 @@
 import graphene
-from graphene.utils import get_unbound_function, props
 from fs_graphene_django.mutations.mutations.utils import decorate_mutate_func
+from graphene.utils import get_unbound_function, props
 
 
 class BaseMutation(graphene.Mutation):
