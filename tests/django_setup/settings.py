@@ -25,6 +25,11 @@ TEMPLATES = [
     }
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'tests.django_setup.test_auth_backend.TestIdAuthenticationBackend',
+]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -35,10 +40,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-GRAPHENE = {"SCHEMA": "tests.django_setup.schema.schema",
-            'MIDDLEWARE': [
-                'graphene_django.debug.DjangoDebugMiddleware',
-            ],
-            }
+GRAPHENE = {
+    'SCHEMA': 'tests.django_setup.schema.schema',
+    'MIDDLEWARE': [
+        'graphene_django.debug.DjangoDebugMiddleware',
+        'tests.django_setup.middleware.TestAuthenticationMiddleware',
+    ],
+}
 USE_TZ = True
 ROOT_URLCONF = "tests.django_setup.urls"

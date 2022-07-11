@@ -25,7 +25,7 @@ class Mutation(BaseMutation):
 
     @classmethod
     def mutate(cls, info, *args, **kwargs):
-        return BasePayload(message='OK')
+        return cls.Output(message='OK')
 
 
 class LoginRequiredMutation(Mutation):

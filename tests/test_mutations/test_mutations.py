@@ -1,22 +1,7 @@
-import json
-from unittest import mock
 import pytest
-from graphene_django.utils.testing import graphql_query
-from graphene.test import Client
-
-from tests.django_setup.schema import schema
 
 
-@pytest.fixture
-def client_query():
-    client = Client(schema)
-
-    def func(*args, **kwargs):
-        return graphql_query(*args, **kwargs, client=client)
-
-    return func
-
-
+@pytest.mark.django_db()
 def test_mutation(client_query):
     response = client_query(
         '''
@@ -25,16 +10,14 @@ def test_mutation(client_query):
                 message
             }
         }
-        ''',
-
+        '''
     )
-    data = json.loads(response.content)
-    # assert data['errors'][0]['message'] == "'WSGIRequest' object has no attribute 'user'"
+    assert response['data']['mutation']['message'] == 'OK'
 
 
-def test_login_required_mutation(client_query):
-    client = Client(schema)
-    response = client.execute(
+@pytest.mark.django_db()
+def test_login_required_mutation(client_query, user_fixture):
+    response = client_query(
         '''
         mutation {
             loginRequired(input: {test: "test"}) {
@@ -42,7 +25,20 @@ def test_login_required_mutation(client_query):
             }
         }
         ''',
-
+        user=user_fixture
     )
-    print(response)
-    assert response['errors'][0]['message'] == "'WSGIRequest' object has no attribute 'user'"
+    assert response['data']['loginRequired']['message'] == 'OK'
+
+
+@pytest.mark.django_db()
+def test_login_required_mutation(client_query, user_fixture):
+    response = client_query(
+        '''
+        mutation {
+            loginRequired(input: {test: "test"}) {
+                message
+            }
+        }
+        '''
+    )
+    assert response['errors'][0]['message'] == 'You do not have permission to perform this action'
