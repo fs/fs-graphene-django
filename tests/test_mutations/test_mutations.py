@@ -31,7 +31,7 @@ def test_login_required_mutation(client_query, user_fixture):
 
 
 @pytest.mark.django_db()
-def test_login_required_mutation(client_query, user_fixture):
+def test_login_required_mutation_without_user(client_query, user_fixture):
     response = client_query(
         '''
         mutation {
