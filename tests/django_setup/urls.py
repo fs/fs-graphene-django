@@ -1,9 +1,7 @@
 from django.urls import path
-
-from graphene_django_pretty.views import PrettyGraphQLView
-
+from graphene_django.views import GraphQLView
 
 urlpatterns = [
-    path('graphql/batch', PrettyGraphQLView.as_view(batch=True)),
-    path('graphql', PrettyGraphQLView.as_view(graphiql=True)),
+    path('graphql/batch', GraphQLView.as_view(batch=True)),
+    path('graphql/', GraphQLView.as_view(graphiql=True)),
 ]

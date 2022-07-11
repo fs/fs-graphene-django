@@ -25,6 +25,20 @@ TEMPLATES = [
     }
 ]
 
-GRAPHENE = {"SCHEMA": "tests.django_setup.schema.schema"}
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+GRAPHENE = {"SCHEMA": "tests.django_setup.schema.schema",
+            'MIDDLEWARE': [
+                'graphene_django.debug.DjangoDebugMiddleware',
+            ],
+            }
 USE_TZ = True
 ROOT_URLCONF = "tests.django_setup.urls"

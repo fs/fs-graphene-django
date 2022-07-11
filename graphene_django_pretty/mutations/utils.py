@@ -1,6 +1,6 @@
 from functools import wraps
 
-from fs_graphene_django.auth.exceptions import PermissionDeniedError
+from graphene_django_pretty.auth.exceptions import PermissionDeniedError
 
 
 def check_permissions(info, input_, permission_classes):

@@ -1,10 +1,11 @@
 import graphene
 from graphene.utils import get_unbound_function, props
-from fs_graphene_django.mutations.mutations.utils import decorate_mutate_func
+from graphene_django_pretty.mutations.utils import decorate_mutate_func
 
 
 class BaseMutation(graphene.Mutation):
     """Base mutation with extra functions."""
+    permission_classes = None
 
     @classmethod
     def setup_input_class(cls, input_class):

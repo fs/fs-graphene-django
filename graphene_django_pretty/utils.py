@@ -1,6 +1,5 @@
 from functools import wraps
 
-from server.core.auth.jwt.exceptions import PermissionDenied
 
 try:
     import django_filters  # noqa
