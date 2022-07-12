@@ -4,7 +4,7 @@ import graphene
 from copy import deepcopy
 from typing import Any, Dict, List, Type
 
-from fs_graphene_django.types.registry import FieldDescriptionDrivenRegistry
+from graphene_django_pretty.types.registry import FieldDescriptionDrivenRegistry
 from graphene import Field
 from graphene.relay import Connection, Node
 from graphene.types.interface import Interface

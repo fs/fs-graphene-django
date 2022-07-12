@@ -1,5 +1,8 @@
 from enum import Enum
+from functools import wraps
 from typing import List
+
+from graphene_django_pretty.auth.exceptions import PermissionDeniedError
 
 
 def get_enum_list_as_input(args: List) -> List[str]:
@@ -22,3 +25,21 @@ def is_list_of_enums(args: List) -> bool:
 def is_enum(arg: str) -> bool:
     """Check arg for enum."""
     return isinstance(arg, Enum)
+
+
+def check_permissions(info, permission_classes):
+    """Running all permissions classes in fields."""
+    for permission in permission_classes:
+        if not permission.has_permissions(info):
+            raise PermissionDeniedError()
+
+
+def decorate_field_resolve(resolve_func, permission_classes):
+    """Adding check user permissions before mutate."""
+
+    @wraps(resolve_func)
+    def wrapper(root, info, *args, **kwargs):
+        check_permissions(info, permission_classes=permission_classes)
+        return resolve_func(root, info, *args, **kwargs)
+
+    return wrapper
