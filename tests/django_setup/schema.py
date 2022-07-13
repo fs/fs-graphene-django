@@ -1,16 +1,22 @@
 import graphene
 from graphene_django_pretty.auth.permissions import AuthenticationRequired
+from graphene_django_pretty.fields.base import BaseField
 from graphene_django_pretty.mutations.base import BaseMutation
 from graphene_django_pretty.mutations.output import BasePayload
 
 
 class Query(graphene.ObjectType):
 
-    test = graphene.String()
+    test = BaseField(graphene.String)
+    login_required_test = BaseField(graphene.String, permission_classes=[AuthenticationRequired])
 
     @classmethod
     def resolve_test(cls, root, info):
-        return "test"
+        return "OK"
+
+    @classmethod
+    def resolve_login_required_test(cls, root, info):
+        return "OK"
 
 
 class TestInput(graphene.InputObjectType):
