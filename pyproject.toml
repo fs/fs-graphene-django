@@ -8,7 +8,7 @@ style = "https://raw.githubusercontent.com/wemake-services/wemake-python-stylegu
 
 
 [tool.poetry]
-name = "fs-graphene-django"
+name = "graphene_django_pretty"
 description = "Graphene-django extension"
 version = "0.1.0"
 license = "MIT"
@@ -17,7 +17,7 @@ authors = []
 
 readme = "README.md"
 
-repository = "https://github.com/flatstack/fs-graphene-django"
+repository = "https://github.com/fs/graphene-django-pretty"
 
 keywords = []
 
