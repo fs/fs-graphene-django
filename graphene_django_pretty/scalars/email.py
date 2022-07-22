@@ -13,7 +13,7 @@ class Email(graphene.Scalar):
         pat = r"^[a-zA-Z0-9-_]+@[a-zA-Z0-9]+\.[a-z]{1,3}$"
         if not isinstance(node, StringValueNode):
             raise GraphQLError(
-                f"DateTime cannot represent non-string value: {print_ast(node)}"
+                f"Email cannot represent non-string value: {print_ast(node)}"
             )
         if not re.match(pat, node.value):
             raise GraphQLError('Invalid email address.', nodes=[node])
