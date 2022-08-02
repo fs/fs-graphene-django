@@ -42,14 +42,8 @@ jobs:
           poetry config virtualenvs.in-project true
           poetry install
 
-      - name: Run linter
-        run: make lint
-
       - name: Run tests
-        run: make lint
-
-      - name: Run package
-        run: make package
+        run: make test
 
   # lint:
   #   runs-on: ubuntu-latest
