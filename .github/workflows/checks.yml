@@ -37,8 +37,9 @@ jobs:
           poetry install
 
       - name: Run checks
-        run: make lint
-        run: make unit
+        run: |
+          make lint
+          make unit
 
       # Upload coverage to codecov: https://codecov.io/
       - name: Upload coverage to Codecov
