@@ -17,9 +17,9 @@ def test_field_query(client_query):
 def test_login_required_field_query(client_query, user_fixture):
     response = client_query(
         """
-            query {
-                loginRequiredTest
-            }
+        query {
+            loginRequiredTest
+        }
         """,
         user=user_fixture,
     )
