@@ -14,5 +14,6 @@ def convert_form_field_to_enum_list(field):
 def convert_form_field_to_enum(field):
     """Overriding graphene_django django_filters field with choices converting."""
     enum = graphene.Enum(field.label, list(field.choices)[1:])
-    # [1:] need for exclude first invalid choice. ChoiceField generates ('', '---------') as a first element.
+    # [1:] need for exclude first invalid choice.
+    # ChoiceField generates ('', '---------') as a first element.
     return enum(required=field.required)

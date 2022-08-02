@@ -1,5 +1,6 @@
 import graphene
 from graphene.utils import get_unbound_function, props
+
 from graphene_django_pretty.mutations.utils import decorate_mutate_func
 
 
@@ -41,10 +42,16 @@ class BaseMutation(graphene.Mutation):
             resolver = get_unbound_function.get_unbound_function(mutate)
 
         super().__init_subclass_with_meta__(
-            resolver=resolver, output=output, arguments=arguments, _meta=_meta, **options,
+            resolver=resolver,
+            output=output,
+            arguments=arguments,
+            _meta=_meta,
+            **options,
         )
 
     @classmethod
     def mutate(cls, info, **kwargs):
         """Abstract method."""
-        raise NotImplementedError('mutate() is not implemented for {0}'.format(cls.__name__))
+        raise NotImplementedError(
+            'mutate() is not implemented for {0}'.format(cls.__name__),
+        )

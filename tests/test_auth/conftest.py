@@ -12,6 +12,7 @@ request_factory = RequestFactory()
 
 @pytest.fixture()
 def authenticated_graphql_info():
+    """Authenticated user mock fixture."""
     context = request_factory.post('/')
     context.user = mock.Mock(
         is_authenticated=True,
@@ -23,8 +24,10 @@ def authenticated_graphql_info():
         spec=GraphQLResolveInfo,
     )
 
+
 @pytest.fixture()
 def unauthenticated_graphql_info():
+    """Anonymous user mock fixture."""
     context = request_factory.post('/')
     context.user = AnonymousUser()
     return mock.Mock(
@@ -36,7 +39,7 @@ def unauthenticated_graphql_info():
 
 @pytest.fixture()
 def resolver_func():
+    """Empty resolver fixture."""
     def resolver(info, root=None, **kwargs):
         return None
-
     return resolver

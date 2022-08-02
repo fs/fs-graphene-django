@@ -1,6 +1,7 @@
 import re
+
 import graphene
-from graphql import StringValueNode, GraphQLError, print_ast
+from graphql import GraphQLError, StringValueNode, print_ast
 
 
 class Email(graphene.Scalar):

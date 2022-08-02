@@ -7,7 +7,7 @@ class BasePayload(graphene.ObjectType):
     ok = graphene.Boolean(required=True)
     message = graphene.String(required=True)
     errors = graphene.List(graphene.String, required=True)
-    # query = graphene.Field('server.schema.Query', required=True)
+    # query = graphene.Field('server.schema.Query', required=True) # noqa: E800
 
     def resolve_message(self, _):
         """Resolving info message."""

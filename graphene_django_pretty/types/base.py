@@ -1,10 +1,8 @@
 import warnings
-import graphene
-
 from copy import deepcopy
 from typing import Any, Dict, List, Type
 
-from graphene_django_pretty.types.registry import FieldDescriptionDrivenRegistry
+import graphene
 from graphene import Field
 from graphene.relay import Connection, Node
 from graphene.types.interface import Interface
@@ -20,6 +18,7 @@ from graphene_django.types import (
     validate_fields,
 )
 
+from graphene_django_pretty.types.registry import FieldDescriptionDrivenRegistry
 from graphene_django_pretty.types.utils import is_valid_django_model
 
 
@@ -112,7 +111,8 @@ class BaseDjangoObjectType(ObjectType):
             )
 
         django_fields = yank_fields_from_attrs(
-            construct_fields(model, registry, fields, exclude, convert_choices_to_enum),
+            construct_fields(model, registry, fields, exclude,
+                             convert_choices_to_enum),
             _as=Field,
         )
 
@@ -142,7 +142,8 @@ class BaseDjangoObjectType(ObjectType):
         # Added in this class instead original DjangoObjectType:
         # Getting fields for django-model anf graphene model and merging them
         interface_fields = cls.get_interface_fields(interfaces)
-        merged_fields = cls.merge_model_and_interface_fields(django_fields, interface_fields)
+        merged_fields = cls.merge_model_and_interface_fields(
+            django_fields, interface_fields)
 
         _meta.model = model
         _meta.registry = registry
@@ -191,7 +192,8 @@ class BaseDjangoObjectType(ObjectType):
         for field_name, field_description in interface_fields.items():
             # replace description from interface if it is not none.
             if field_description.description:
-                merged_fields.get(field_name).description = field_description.description
+                merged_fields.get(
+                    field_name).description = field_description.description
 
         return merged_fields
 
@@ -201,7 +203,8 @@ class BaseDjangoObjectType(ObjectType):
         if isinstance(root, cls):
             return True
         if not is_valid_django_model(root.__class__):
-            raise Exception(('Received incompatible instance "{}".').format(root))
+            raise Exception(
+                ('Received incompatible instance "{}".').format(root))
 
         if cls._meta.model._meta.proxy:
             model = root._meta.model
@@ -221,5 +224,3 @@ class BaseDjangoObjectType(ObjectType):
         node_field = graphene.relay.Node.Field(cls)
         node_field.wrap_resolve = lambda parent: cls.node_resolver
         return node_field
-
-
