@@ -1,0 +1,35 @@
+name: production
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    uses: fs/graphene-django-pretty/.github/workflows/build.yml@main
+  lint:
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - name: Run linter
+        run: make lint
+  test:
+    runs-on: ubuntu-latest
+    needs: [lint]
+    steps:
+      - name: Run tests
+        run: make unit
+
+  package:
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - name: Run package
+        run: make package
