@@ -1,11 +1,10 @@
-name: test
+name: Build
 
 on:
   push:
-    branches:
-      - master
   pull_request:
   workflow_dispatch:
+  workflow_call:
 
 concurrency:
   group: ${{ github.head_ref || github.run_id }}
@@ -17,7 +16,6 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.8", "3.9", "3.10"]
-
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
@@ -33,18 +31,13 @@ jobs:
           # Adding `poetry` to `$PATH`:
           echo "$HOME/.poetry/bin" >> $GITHUB_PATH
 
+      - name: Set up cache
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: venv-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
+
       - name: Install dependencies
         run: |
           poetry config virtualenvs.in-project true
           poetry install
-
-      - name: Run checks
-        run: make test
-        run: make lint
-        run: make unit
-
-      # Upload coverage to codecov: https://codecov.io/
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
-        with:
-          file: ./coverage.xml

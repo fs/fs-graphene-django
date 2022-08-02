@@ -1,0 +1,21 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+
+concurrency:
+  group: ${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    uses: fs/graphene-django-pretty/.github/workflows/build.yml@main
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run checks
+        run: |
+          make lint
+          make unit
