@@ -46,6 +46,10 @@ jobs:
     needs: [build]
     steps:
       - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
       - name: Run linter
         run: poetry run flake8 .
   test:
@@ -53,6 +57,10 @@ jobs:
     needs: [build]
     steps:
       - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
       - name: Run tests
         run: make unit
   package:
@@ -60,5 +68,9 @@ jobs:
     needs: [build]
     steps:
       - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
       - name: Run package
         run: make package
