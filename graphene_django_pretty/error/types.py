@@ -1,5 +1,3 @@
-
-from email import message
 import re
 from typing import Union
 
@@ -14,12 +12,11 @@ error_text = (
 
 
 class StatusCodeError(ValueError):
+    """Custom ValueError for invalid status code."""
 
     def __init__(self, *args: object) -> None:
+        """Overriding with status code text."""
         super().__init__(error_text, *args)
-
-    def __str__(self) -> str:
-        return super().__str__()
 
 
 def validate_status_code(code: StatusCode):

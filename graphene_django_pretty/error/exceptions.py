@@ -9,7 +9,13 @@ class BaseGraphQLError(GraphQLError):
     default_message: str = None
     default_code: StatusCode = None
 
-    def __init__(self, code: StatusCode = None, message: str = None, *args, **kwargs):
+    def __init__(
+        self,
+        code: StatusCode = None,
+        message: str = None,
+        *args,
+        **kwargs,
+    ):
         """Init overriding for status code and message."""
         if not message:
             message = self.default_message
