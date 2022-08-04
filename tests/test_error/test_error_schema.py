@@ -4,7 +4,7 @@ from graphene_django_pretty.error.exceptions import BaseGraphQLError
 from tests.django_setup.errors import DefaultError
 
 
-class TestGraphQLError(BaseGraphQLError):
+class GraphQLTestError(BaseGraphQLError):
     """Error class with defaults for test."""
 
     default_code: int = 404
@@ -18,7 +18,8 @@ class TestGraphQLError(BaseGraphQLError):
         BaseGraphQLError(code=500, message='test error'),
         BaseGraphQLError(message='test error'),
         BaseGraphQLError(code=500),
-        TestGraphQLError(),
+        BaseGraphQLError(code='ERROR_CODE', message='test error'),
+        GraphQLTestError(),
     ])
 def test_errors(error, mock_error, client_query):
     if error:
