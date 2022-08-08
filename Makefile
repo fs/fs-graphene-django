@@ -2,7 +2,7 @@ SHELL:=/usr/bin/env bash
 
 .PHONY: lint
 lint:
-	poetry run mypy fs_graphene_django tests/**/*.py
+	poetry run mypy .
 	poetry run flake8 .
 	poetry run doc8 -q docs
 
