@@ -1,10 +1,10 @@
-from typing import List, Union
 from functools import partial, wraps
+from typing import List, Union
 
 from django.contrib.auth import get_user_model
 from graphql.execution.execute import GraphQLResolveInfo
-from graphene_django_pretty.auth.exceptions import PermissionDeniedError
 
+from graphene_django_pretty.auth.exceptions import PermissionDeniedError
 
 User = get_user_model()
 

@@ -1,4 +1,3 @@
-from enum import Enum
 from typing import Dict, List
 
 from django.core.exceptions import ValidationError
@@ -20,8 +19,10 @@ def define_filter_arg(field_name: str, field_value: object) -> object:
     elif isinstance(field_value, list) and field_value:
         if is_list_of_enums(field_value):
             # Added for list of enums field (graphene.List(graphene.Enum))
-            # Without this line input enum values looks like '[ActivityEnum].[USER_LOGGED_IN]',
-            # where ActivityEnum - name of class, USER_LOGGED_IN - choices value of model field
+            # Without this line input enum values looks like
+            # '[ActivityEnum].[USER_LOGGED_IN]',
+            # where ActivityEnum - name of class,
+            # USER_LOGGED_IN - choices value of model field
             return get_enum_list_as_input(field_value)
     elif is_enum(field_value):
         return get_enum_as_input(field_value)
@@ -42,13 +43,32 @@ def get_filter_kwargs(all_args: List, filtering_args: List) -> Dict[str, str]:
 
 
 class FilterConnectionField(DjangoFilterConnectionField):
-    """Override filter graphene_django connection field for enum as filter field."""
+    """
+    Override filter graphene_django connection field for enum as filter field.
+    """
 
     @classmethod
-    def resolve_queryset(cls, connection, iterable, info, args, filtering_args, filterset_class):  # noqa: WPS211
+    def resolve_queryset(  # noqa: WPS211
+        cls,
+        connection,
+        iterable,
+        info,
+        args,
+        filtering_args,
+        filterset_class,
+    ):
         """Changed list filter field definition."""
-        qs = super(DjangoFilterConnectionField, cls).resolve_queryset(connection, iterable, info, args)  # noqa: WPS608
-        filterset = filterset_class(data=get_filter_kwargs(args, filtering_args), queryset=qs, request=info.context)
+        qs = super().resolve_queryset(
+            connection,
+            iterable,
+            info,
+            args,
+        )  # noqa: WPS608
+        filterset = filterset_class(
+            data=get_filter_kwargs(args, filtering_args),
+            queryset=qs,
+            request=info.context,
+        )
 
         if filterset.form.is_valid():
             return filterset.qs

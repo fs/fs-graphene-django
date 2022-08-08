@@ -1,6 +1,5 @@
 from functools import wraps
 
-
 try:
     import django_filters  # noqa
 
