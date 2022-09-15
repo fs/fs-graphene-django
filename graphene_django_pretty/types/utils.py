@@ -11,7 +11,7 @@ def is_valid_django_model(model: Any) -> bool:
     is_django_model = inspect.isclass(model) and issubclass(model, models.Model)
 
     if DJANGO_POLYMORPHIC_INSTALLED and not is_django_model:
-        from polymorphic.models import PolymorphicModel
+        from polymorphic.models import PolymorphicModel  # noqa: WPS433
         return issubclass(model, PolymorphicModel)
 
     return is_django_model

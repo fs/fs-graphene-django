@@ -44,7 +44,9 @@ def get_filter_kwargs(all_args: List, filtering_args: List) -> Dict[str, str]:
 
 class FilterConnectionField(DjangoFilterConnectionField):
     """
-    Override filter graphene_django connection field for enum as filter field.
+    Override filter graphene_django connection field.
+
+    Overrides filter graphene_django connection field for enum as filter field.
     """
 
     @classmethod
@@ -52,18 +54,15 @@ class FilterConnectionField(DjangoFilterConnectionField):
         cls,
         connection,
         iterable,
-        info,
+        info,  # noqa: WPS110
         args,
         filtering_args,
         filterset_class,
     ):
         """Changed list filter field definition."""
-        qs = super().resolve_queryset(
-            connection,
-            iterable,
-            info,
-            args,
-        )  # noqa: WPS608
+        qs = super(DjangoFilterConnectionField, cls).resolve_queryset(  # noqa: E501, WPS608
+            connection, iterable, info, args,
+        )
         filterset = filterset_class(
             data=get_filter_kwargs(args, filtering_args),
             queryset=qs,

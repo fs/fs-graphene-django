@@ -9,12 +9,11 @@ class BaseField(Field):
     def __init__(self, *args, permission_classes=None, **kwargs):
         """Init overriding for additional permission classes."""
         self.permission_classes = permission_classes
-        super().__init__(*args, **kwargs)
+        super(BaseField, self).__init__(*args, **kwargs)  # noqa: WPS608
 
     def wrap_resolve(self, parent_resolver):
-        """Wrap resolver."""
-        super_wrap = super().wrap_resolve(parent_resolver)
+        """Wraps a function resolver with permission classes."""
+        super_wrap = super(BaseField, self).wrap_resolve(parent_resolver)  # noqa: E501, WPS608
         return decorate_field_resolve(
-            super_wrap,
-            permission_classes=self.permission_classes or [],
+            super_wrap, permission_classes=self.permission_classes or [],
         )

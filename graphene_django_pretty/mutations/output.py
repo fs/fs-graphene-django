@@ -7,13 +7,12 @@ class BasePayload(graphene.ObjectType):
     ok = graphene.Boolean(required=True)
     message = graphene.String(required=True)
     errors = graphene.List(graphene.String, required=True)
-    # query = graphene.Field('server.schema.Query', required=True) # noqa: E800
 
     def resolve_message(self, _):
         """Resolving info message."""
         no_errors = self.ok is None and not self.errors
         if not self.message:
-            return ('Success' if self.ok or no_errors else 'Fail')
+            return 'Success' if self.ok or no_errors else 'Fail'
 
         return self.message
 

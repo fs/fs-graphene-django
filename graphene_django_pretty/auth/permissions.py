@@ -9,15 +9,19 @@ class OR:
         self.op1 = op1
         self.op2 = op2
 
-    def has_permissions(self, info, _):
-        """Permission cheking for union."""
-        return self.op1.has_permissions(info, _) or self.op2.has_permissions(info, _)
+    def has_permissions(self, info, _):  # noqa: WPS110
+        """Permission checking for union."""
+        return (
+            self.op1.has_permissions(info, _) or
+            self.op2.has_permissions(info, _)
+        )
 
 
 class PermissionMeta(type):
     """Permission union metaclass."""
 
-    def __or__(cls, permission):
+    def __or__(cls, permission) -> OR:
+        """Returns instance of or class realization."""
         return OR(cls, permission)
 
 

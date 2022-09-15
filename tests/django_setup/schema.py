@@ -19,15 +19,17 @@ class Query(graphene.ObjectType):
 
     @classmethod
     def resolve_test(cls, root, info):
+        """Resolver for test field."""
         return 'OK'
 
     @classmethod
     def resolve_login_required_test(cls, root, info):
+        """Resolver for login_required_test field."""
         return 'OK'
 
 
 class TestInput(graphene.InputObjectType):
-    """Test input."""
+    """Input with string field."""
 
     test = graphene.String()
 
@@ -46,17 +48,19 @@ class EmailMutation(BaseMutation):
 
     @classmethod
     def mutate(cls, info, *args, **kwargs):
+        """Mutate field."""
         return cls.Output(message='OK')
 
 
 class Mutation(BaseMutation):
-    """Simple mutation."""
+    """Mutation for simpel string field."""
 
     Input = TestInput()
     Output = BasePayload
 
     @classmethod
     def mutate(cls, info, *args, **kwargs):
+        """Mutate field."""
         return cls.Output(message='OK')
 
 

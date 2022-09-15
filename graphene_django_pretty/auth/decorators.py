@@ -10,9 +10,13 @@ User = get_user_model()
 
 
 def find_context(func):
-    """Find info(GraphQLResolveInfo instance) argument in resolvers or mutations and return context from that."""
+    """Return context from GraphQLResolveInfo in resolvers or mutations."""
     def wrapper(*args, **kwargs):
-        info = next(arg for arg in args if isinstance(arg, GraphQLResolveInfo))
+        info = next(  # noqa: WPS110
+            arg
+            for arg in args
+            if isinstance(arg, GraphQLResolveInfo)
+        )
         return func(info.context, *args, **kwargs)
 
     return wrapper

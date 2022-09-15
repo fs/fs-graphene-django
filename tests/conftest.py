@@ -26,7 +26,7 @@ def request_factory():
 
 @pytest.fixture()
 def client_query(request_factory):
-    """GraphQL request factory."""
+    """GraphQL request factory."""  # noqa: D403
     client = Client(schema, middleware=list(initial_middleware()))
 
     def func(query, user=None, **query_params):

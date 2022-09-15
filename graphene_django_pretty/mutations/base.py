@@ -6,6 +6,7 @@ from graphene_django_pretty.mutations.utils import decorate_mutate_func
 
 class BaseMutation(graphene.Mutation):
     """Base mutation with extra functions."""
+
     permission_classes = None
 
     @classmethod
@@ -50,7 +51,7 @@ class BaseMutation(graphene.Mutation):
         )
 
     @classmethod
-    def mutate(cls, info, **kwargs):
+    def mutate(cls, info, **kwargs):  # noqa: WPS110
         """Abstract method."""
         raise NotImplementedError(
             'mutate() is not implemented for {0}'.format(cls.__name__),

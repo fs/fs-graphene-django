@@ -10,7 +10,7 @@ def get_enum_list_as_input(args: List) -> List[str]:
     return [get_enum_as_input(enum_value) for enum_value in args]
 
 
-def get_enum_as_input(enum: str) -> str:
+def get_enum_as_input(enum: Enum) -> str:
     """Get enum value."""
     return enum.value
 
@@ -27,7 +27,7 @@ def is_enum(arg: str) -> bool:
     return isinstance(arg, Enum)
 
 
-def check_permissions(info, permission_classes):
+def check_permissions(info, permission_classes) -> None:  # noqa: WPS110
     """Running all permissions classes in fields."""
     for permission in permission_classes:
         if not permission.has_permissions(info):
@@ -38,7 +38,7 @@ def decorate_field_resolve(resolve_func, permission_classes):
     """Adding check user permissions before mutate."""
 
     @wraps(resolve_func)
-    def wrapper(root, info, *args, **kwargs):
+    def wrapper(root, info, *args, **kwargs):  # noqa: WPS110
         check_permissions(info, permission_classes=permission_classes)
         return resolve_func(root, info, *args, **kwargs)
 
