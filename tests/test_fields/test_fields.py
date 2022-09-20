@@ -36,5 +36,5 @@ def test_login_required_field_query_without_user(client_query):
         """,
     )
     assert response['errors'][0]['message'] == (
-        'You do not have permission to perform this action',
+        'You do not have permission to perform this action'
     )
