@@ -1,6 +1,6 @@
 import warnings
 from copy import deepcopy
-from typing import Any, Dict, List, Type
+from typing import Any, Dict, List, Optional, Type
 
 import graphene
 from django.db.models import Model
@@ -25,9 +25,9 @@ from graphene_django_pretty.types.utils import is_valid_django_model
 class PatchedDjangoObjectTypeOptions(ObjectTypeOptions):
     """Redefined class for adding special attributes for implementing interface fields."""  # noqa: E501
 
-    model: Model = None
-    registry: Registry = None
-    connection: Type[Connection] = None
+    model: Optional[Model] = None
+    registry: Optional[Registry] = None
+    connection: Optional[Type[Connection]] = None
 
     filter_fields = ()
     filterset_class = None

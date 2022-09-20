@@ -4,7 +4,7 @@ import pytest
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 from django.test import RequestFactory
-from graphql.execution.execute import GraphQLResolveInfo
+from graphql.execution.execute import GraphQLResolveInfo  # type: ignore
 
 UserModel = get_user_model()
 request_factory = RequestFactory()

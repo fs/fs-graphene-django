@@ -1,3 +1,6 @@
+from abc import abstractmethod
+from typing import Optional
+
 from graphql.error.graphql_error import GraphQLError
 
 from graphene_django_pretty.error.types import StatusCode, validate_status_code
@@ -6,13 +9,20 @@ from graphene_django_pretty.error.types import StatusCode, validate_status_code
 class BaseGraphQLError(GraphQLError):
     """Base extended GraphQLError with status code."""
 
-    default_message: str = None
-    default_code: StatusCode = None
+    @property
+    @abstractmethod
+    def default_message(self) -> str:
+        """Default error message."""
+
+    @property
+    @abstractmethod
+    def default_code(self) -> StatusCode:
+        """Default error code."""
 
     def __init__(
         self,
-        code: StatusCode = None,
-        message: str = None,
+        code: Optional[StatusCode] = None,
+        message: Optional[str] = None,
         *args,
         **kwargs,
     ):
@@ -28,4 +38,4 @@ class BaseGraphQLError(GraphQLError):
             extensions.update({'code': self.code})
             kwargs['extensions'] = extensions
 
-        super().__init__(message=message, *args, **kwargs)
+        super().__init__(message, *args, **kwargs)
