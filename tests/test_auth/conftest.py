@@ -41,5 +41,5 @@ def unauthenticated_graphql_info():
 def resolver_func():
     """Empty resolver fixture."""
     def resolver(info, root=None, **kwargs):
-        return None
+        return  # noqa: WPS324
     return resolver

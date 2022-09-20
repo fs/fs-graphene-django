@@ -43,4 +43,5 @@ def test_errors(error, mock_error, client_query):
     if error.code:
         assert response_error['extensions']['code'] == error.code
     else:
-        assert not hasattr(response_error, 'extensions')
+        with pytest.raises(AttributeError):
+            response_error.extensions  # noqa: WPS428

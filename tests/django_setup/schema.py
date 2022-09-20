@@ -75,6 +75,7 @@ class ErrorMutation(Mutation):
 
     @classmethod
     def mutate(cls, info, *args, **kwargs):
+        """Mutate field."""
         return error_func()
 
 

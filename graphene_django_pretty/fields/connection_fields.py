@@ -20,7 +20,7 @@ def define_filter_arg(field_name: str, field_value: object) -> object:
         if is_list_of_enums(field_value):
             # Added for list of enums field (graphene.List(graphene.Enum))
             # Without this line input enum values looks like
-            # '[ActivityEnum].[USER_LOGGED_IN]',
+            # '[ActivityEnum].[USER_LOGGED_IN]',  # noqa: E800
             # where ActivityEnum - name of class,
             # USER_LOGGED_IN - choices value of model field
             return get_enum_list_as_input(field_value)

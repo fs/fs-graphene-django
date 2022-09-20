@@ -6,7 +6,7 @@ from django.utils.functional import SimpleLazyObject
 class TestAuthenticationMiddleware:
     """Setup request with user."""
 
-    def resolve(self, next, root, info, **kwargs):
+    def resolve(self, next_middleware, root, info, **kwargs):
         """Link user for request by django authentication."""
         context = info.context
 
@@ -14,4 +14,4 @@ class TestAuthenticationMiddleware:
             return authenticate(request=context) or AnonymousUser()
 
         context.user = SimpleLazyObject(get_user)
-        return next(root, info, **kwargs)
+        return next_middleware(root, info, **kwargs)
