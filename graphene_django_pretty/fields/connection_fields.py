@@ -1,4 +1,5 @@
-from typing import Dict, List
+from enum import Enum
+from typing import Any, Dict, List, Union
 
 from django.core.exceptions import ValidationError
 from graphene.utils.str_converters import to_snake_case as parse_to_snake_case
@@ -12,7 +13,7 @@ from graphene_django_pretty.fields.utils import (
 )
 
 
-def define_filter_arg(field_name: str, field_value: object) -> object:
+def define_filter_arg(field_name: str, field_value: Union[object, Enum]) -> object:
     """Filter field type definition."""
     if field_name == 'order_by' and field_value is not None:
         return parse_to_snake_case(field_value)
@@ -25,12 +26,12 @@ def define_filter_arg(field_name: str, field_value: object) -> object:
             # USER_LOGGED_IN - choices value of model field
             return get_enum_list_as_input(field_value)
     elif is_enum(field_value):
-        return get_enum_as_input(field_value)
+        return get_enum_as_input(field_value)  # type: ignore
 
     return field_value
 
 
-def get_filter_kwargs(all_args: List, filtering_args: List) -> Dict[str, str]:
+def get_filter_kwargs(all_args: Dict[str, Any], filtering_args: List[Any]) -> Dict[str, Any]:
     """Filter kwargs definition."""
     filters = {}
     for key, arg_value in all_args.items():

@@ -25,10 +25,10 @@ def _get_project_meta():
     with open('../pyproject.toml') as pyproject:
         file_contents = pyproject.read()
 
-    return tomlkit.parse(file_contents)['tool']['poetry']
+    return tomlkit.parse(file_contents)['tool']['poetry']  # type: ignore
 
 
-pkg_meta = _get_project_meta()
+pkg_meta = _get_project_meta()  # type: ignore
 project = str(pkg_meta['name'])
 copyright = '2022, flatstack'  # noqa: WPS125
 author = 'flatstack'

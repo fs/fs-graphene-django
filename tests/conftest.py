@@ -1,3 +1,6 @@
+
+from typing import Iterator
+
 import pytest
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -10,7 +13,7 @@ from tests.django_setup.schema import schema
 User = get_user_model()
 
 
-def initial_middleware():
+def initial_middleware() -> Iterator[object]:
     """Initial middleware generator."""
     middlewares = settings.GRAPHENE['MIDDLEWARE']
     for middleware in middlewares:

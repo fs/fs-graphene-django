@@ -20,8 +20,8 @@ class OR:
 class PermissionMeta(type):
     """Permission union metaclass."""
 
-    def __or__(cls, permission) -> OR:
-        """Returns instance of or class realization."""
+    def __or__(cls, permission):
+        """Realization | operator."""
         return OR(cls, permission)
 
 

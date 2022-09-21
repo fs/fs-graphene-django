@@ -1,3 +1,5 @@
+from typing import List
+
 import graphene
 from graphene.utils import get_unbound_function, props
 
@@ -7,10 +9,10 @@ from graphene_django_pretty.mutations.utils import decorate_mutate_func
 class BaseMutation(graphene.Mutation):
     """Base mutation with extra functions."""
 
-    permission_classes = None
+    permission_classes: List[object] = []
 
     @classmethod
-    def setup_input_class(cls, input_class):
+    def setup_input_class(cls, input_class) -> None:
         """Added extra attrs for input class."""
         kwargs = input_class.kwargs
         if 'required' not in kwargs:

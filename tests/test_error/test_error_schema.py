@@ -1,3 +1,5 @@
+from typing import Any
+
 import pytest
 
 from graphene_django_pretty.error.exceptions import BaseGraphQLError
@@ -26,7 +28,7 @@ def test_errors(error, mock_error, client_query):
         mock_error(error)
     else:
         error = DefaultError()
-    response: dict[str, list[dict]] = client_query(
+    response: dict[str, list[dict[Any, Any]]] = client_query(
         """
             mutation {
                 errors(input: {test: "test"}) {
@@ -43,5 +45,4 @@ def test_errors(error, mock_error, client_query):
     if error.code:
         assert response_error['extensions']['code'] == error.code
     else:
-        with pytest.raises(AttributeError):
-            response_error.extensions  # noqa: WPS428
+        assert 'extensions' not in response_error.keys()

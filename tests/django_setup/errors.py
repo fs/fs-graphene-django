@@ -13,6 +13,6 @@ errors_dict = {
 }
 
 
-def error_func():
+def error_func() -> BaseGraphQLError:
     """Test func for error rising."""
     raise errors_dict['error']
