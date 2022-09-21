@@ -41,9 +41,9 @@ def user_passes_test(test_func, exc=PermissionDeniedError) -> FuncT:
 
 
 def check_perms(
-    user: User,
+    user: User,  # type: ignore
     perm: Union[Tuple[str], str],
-) -> bool:  # type: ignore
+) -> bool:
     """Check user having permission."""
     if isinstance(perm, str):
         perms = (perm,)
