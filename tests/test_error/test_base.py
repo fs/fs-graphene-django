@@ -18,8 +18,8 @@ from graphene_django_pretty.error.types import StatusCodeError
 )
 def test_valid_error_codes(code, message):
     error = BaseGraphQLError(code=code, message=message)
-    assert error.message == message
-    assert error.code == code
+    assert error.message == (message if message else BaseGraphQLError.default_message)
+    assert error.code == (code if code else BaseGraphQLError.default_code)
     if code:
         assert error.extensions == {'code': code}
 

@@ -9,15 +9,8 @@ from graphene_django_pretty.error.types import StatusCode, validate_status_code
 class BaseGraphQLError(GraphQLError):
     """Base extended GraphQLError with status code."""
 
-    @property
-    @abstractmethod
-    def default_message(self) -> str:
-        """Default error message."""
-
-    @property
-    @abstractmethod
-    def default_code(self) -> StatusCode:
-        """Default error code."""
+    default_message: str = 'Default error message'
+    default_code: StatusCode = 400
 
     def __init__(
         self,
