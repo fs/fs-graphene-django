@@ -1,4 +1,3 @@
-from abc import abstractmethod
 from typing import Optional
 
 from graphql.error.graphql_error import GraphQLError

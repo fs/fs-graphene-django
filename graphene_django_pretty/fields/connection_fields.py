@@ -13,7 +13,10 @@ from graphene_django_pretty.fields.utils import (
 )
 
 
-def define_filter_arg(field_name: str, field_value: Union[object, Enum]) -> object:
+def define_filter_arg(
+    field_name: str,
+    field_value: Union[object, Enum],
+) -> object:
     """Filter field type definition."""
     if field_name == 'order_by' and field_value is not None:
         return parse_to_snake_case(field_value)
@@ -31,7 +34,10 @@ def define_filter_arg(field_name: str, field_value: Union[object, Enum]) -> obje
     return field_value
 
 
-def get_filter_kwargs(all_args: Dict[str, Any], filtering_args: List[Any]) -> Dict[str, Any]:
+def get_filter_kwargs(
+    all_args: Dict[str, Any],
+    filtering_args: List[Any],
+) -> Dict[str, Any]:
     """Filter kwargs definition."""
     filters = {}
     for key, arg_value in all_args.items():

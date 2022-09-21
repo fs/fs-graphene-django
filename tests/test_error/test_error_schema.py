@@ -28,7 +28,7 @@ def test_errors(error, mock_error, client_query):
         mock_error(error)
     else:
         error = DefaultError()
-    response: dict[str, list[dict[Any, Any]]] = client_query(
+    response: dict[str, list[dict[Any, Any]]] = client_query(  # noqa: WPS234
         """
             mutation {
                 errors(input: {test: "test"}) {

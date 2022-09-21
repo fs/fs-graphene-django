@@ -3,8 +3,7 @@ from typing import Any, Callable, TypeVar, cast
 
 from graphene_django_pretty.auth.exceptions import PermissionDeniedError
 
-
-FuncT = TypeVar("FuncT", bound=Callable[..., Any])
+FuncT = TypeVar('FuncT', bound=Callable[..., Any])
 
 
 def check_permissions(info, input_, permission_classes) -> None:  # noqa: WPS110

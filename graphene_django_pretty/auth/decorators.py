@@ -9,7 +9,7 @@ from graphene_django_pretty.auth.exceptions import PermissionDeniedError
 User = get_user_model()
 
 
-FuncT = TypeVar("FuncT", bound=Callable[..., Any])
+FuncT = TypeVar('FuncT', bound=Callable[..., Any])
 
 
 def find_context(func):
@@ -40,7 +40,10 @@ def user_passes_test(test_func, exc=PermissionDeniedError) -> FuncT:
     return cast(FuncT, decorator)
 
 
-def check_perms(user: User, perm: Union[Tuple[str], str]) -> bool:  # type: ignore
+def check_perms(
+    user: User,
+    perm: Union[Tuple[str], str],
+) -> bool:  # type: ignore
     """Check user having permission."""
     if isinstance(perm, str):
         perms = (perm,)
@@ -55,6 +58,12 @@ def permission_required(perm: Union[List[str], str]):
     return user_passes_test(func)
 
 
-login_required = user_passes_test(lambda user: user.is_authenticated)  # type: ignore
-staff_member_required = user_passes_test(lambda user: user.is_staff)  # type: ignore
-superuser_required = user_passes_test(lambda user: user.is_superuser)  # type: ignore
+login_required = user_passes_test(
+    lambda user: user.is_authenticated,
+)  # type: ignore
+staff_member_required = user_passes_test(
+    lambda user: user.is_staff,
+)  # type: ignore
+superuser_required = user_passes_test(
+    lambda user: user.is_superuser,
+)  # type: ignore
