@@ -38,7 +38,7 @@ pytest-django = "^4.5.2"
 pytest-pythonpath = "^0.7.4"
 
 [tool.poetry.dev-dependencies]
-mypy = "^0.931"
+mypy = "^0.982"
 
 wemake-python-styleguide = "^0.16"
 flake8-pytest-style = "^1.6"
